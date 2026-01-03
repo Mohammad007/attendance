@@ -1,79 +1,102 @@
-# 📱 Laborbook - Offline Worker Management App
+# <img src="assets/readme/icon.png" width="48" height="48" /> Laborbook - Offline Worker Management
 
-A **100% offline Flutter application** for managing workers, attendance, wages, and payments using **SQLite** database.
+[![Flutter](https://img.shields.io/badge/Flutter-3.10+-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
+[![SQLite](https://img.shields.io/badge/SQLite-Offline-003B57?logo=sqlite&logoColor=white)](https://www.sqlite.org/)
+[![Status](https://img.shields.io/badge/Status-Beta-brightgreen.svg)]()
+[![Platform](https://img.shields.io/badge/Platform-Android-3DDC84?logo=android&logoColor=white)]()
 
-## ✨ Features
+**Laborbook** is a premium, 100% offline worker management solution built with Flutter. Designed for contractors, site managers, and small business owners, it simplifies the complex task of tracking attendance, calculating wages, and managing worker payments—all without requiring an internet connection.
 
-### 👤 Worker Management
-- ✅ Add, edit, and delete workers
-- ✅ Assign job types and daily wages
-- ✅ Upload worker photos
-- ✅ Activate/deactivate workers
-- ✅ Search workers by name
+---
 
-### 📅 Attendance Management
-- ✅ Daily attendance marking (Present/Absent/Half-day)
-- ✅ Overtime hours tracking
-- ✅ Calendar view
-- ✅ Edit past attendance records
-- ✅ Bulk attendance marking
-- ✅ Attendance statistics
+## 📸 App Screenshots
 
-### 💰 Wage Calculation
-- ✅ Automatic wage calculation based on attendance
-- ✅ Half-day wage calculation (50% of daily wage)
-- ✅ Overtime calculation (1.5x rate)
-- ✅ Advance deduction
-- ✅ Daily/weekly/monthly summaries
-- ✅ Balance tracking
+<p align="center">
+  <img src="assets/readme/screenshot.png" width="350" alt="Dashboard Screenshot" />
+</p>
 
-### 💵 Payment Management
-- ✅ Record cash payments
-- ✅ Track advances
-- ✅ Payment history
-- ✅ Automatic balance calculation
+---
 
-### 📄 Reports & Wage Slips
-- ✅ Generate professional wage slips (PDF)
-- ✅ Attendance reports (PDF)
-- ✅ Monthly worker reports
-- ✅ Export to PDF
-- ✅ Share via WhatsApp/Email
+## ✨ Why Laborbook?
 
-### 🔒 Security
-- 🔄 App lock with PIN (Coming Soon)
-- ✅ All data stored locally
-- ✅ No internet required
+Managing daily-wage workers can be chaotic. **Laborbook** brings order to the chaos with:
 
-## 🏗️ Project Structure
+*   **🔒 Privacy First:** All data is stored locally on your device using SQLite. No cloud, no tracking.
+*   **⚡ Lightning Fast:** Highly optimized UI using Material 3 and Provider for a smooth experience.
+*   **📂 PDF Reports:** Generate professional wage slips and attendance reports in seconds.
+*   **🛠️ Offline Capability:** Works perfectly in remote sites with zero connectivity.
 
+---
+
+## 🚀 Getting Started (Setup Guide)
+
+Follow these steps to set up the project on your local machine.
+
+### 1. Prerequisites
+Before you begin, ensure you have the following installed:
+*   [Flutter SDK](https://docs.flutter.dev/get-started/install) (v3.10.4 or higher)
+*   [Dart SDK](https://dart.dev/get-started/sdk/install)
+*   Android Studio / VS Code with Flutter extension
+*   Java Development Kit (JDK) 11+ (for Android builds)
+
+### 2. Download Project
+```bash
+# Navigate to your workspace
+cd d:\App\attendance
 ```
+
+### 3. Install Dependencies
+Run the following command to fetch all required packages:
+```bash
+flutter pub get
+```
+
+### 4. Database Setup
+The app uses SQLite via `sqflite`. No manual database setup is required. The database schema will be automatically initialized when you first launch the app.
+
+### 5. Running the App
+Connect your physical device or start an emulator and run:
+```bash
+flutter run
+```
+
+---
+
+## 🛠️ Tech Stack & Architecture
+
+*   **Framework:** [Flutter](https://flutter.dev/) (UI & Logic)
+*   **Database:** [SQLite](https://pub.dev/packages/sqflite) (Local Storage)
+*   **State Management:** [Provider](https://pub.dev/packages/provider)
+*   **PDF Logic:** [pdf](https://pub.dev/packages/pdf) & [printing](https://pub.dev/packages/printing)
+*   **UI Style:** Material 3 with Custom Gradients
+
+### Project Organization
+```text
 lib/
-├── main.dart                          # App entry point
-├── database/
-│   └── database_helper.dart           # SQLite database setup
-├── models/
-│   ├── worker.dart                    # Worker model
-│   ├── attendance.dart                # Attendance model
-│   ├── payment.dart                   # Payment model
-│   └── settings.dart                  # Settings model
-├── services/
-│   ├── worker_service.dart            # Worker CRUD operations
-│   ├── attendance_service.dart        # Attendance operations
-│   ├── payment_service.dart           # Payment operations
-│   ├── wage_calculation_service.dart  # Wage calculation logic
-│   └── pdf_service.dart               # PDF generation
-├── providers/
-│   ├── worker_provider.dart           # Worker state management
-│   ├── attendance_provider.dart       # Attendance state management
-│   └── payment_provider.dart          # Payment state management
-└── screens/
-    ├── dashboard_screen.dart          # Main dashboard
-    ├── workers_list_screen.dart       # Workers list
-    ├── attendance_screen.dart         # Attendance marking
-    ├── wage_summary_screen.dart       # Wage summary
-    └── reports_screen.dart            # Reports
+├── database/     # SQLite Database Helper & Schema
+├── models/       # Data entities (Worker, Attendance, Payment)
+├── services/     # Business logic & Calculations
+├── providers/    # App state management
+└── screens/      # High-performance UI views
 ```
+
+---
+
+## 📈 Wage Calculation Logic
+
+Laborbook uses a precise calculation engine to ensure accurate payments:
+
+| Type | Rate | Description |
+| :--- | :--- | :--- |
+| **Present** | 100% | Full daily wage applied |
+| **Half-day** | 50% | Half of the daily wage applied |
+| **Overtime** | 1.5x | Calculated per hour (Base: 8h/day) |
+| **Absent** | 0% | No wage deducted from balance |
+
+**Formula:**  
+`Net Wage = (Total Days × Daily Wage) + (OT Hours × OT Rate) - Advances`
+
+---
 
 ## 🗄️ Database Schema
 
@@ -103,193 +126,32 @@ CREATE TABLE attendance (
 );
 ```
 
-### Payments Table
-```sql
-CREATE TABLE payments (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  worker_id INTEGER NOT NULL,
-  amount REAL NOT NULL,
-  payment_date TEXT NOT NULL,
-  payment_type TEXT NOT NULL,
-  note TEXT,
-  FOREIGN KEY (worker_id) REFERENCES workers (id) ON DELETE CASCADE
-);
-```
+---
 
-### Settings Table
-```sql
-CREATE TABLE settings (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  language TEXT DEFAULT 'English',
-  currency TEXT DEFAULT '₹',
-  app_pin TEXT,
-  theme_mode TEXT DEFAULT 'light'
-);
-```
+## 📦 Build Instructions
 
-## 🧰 Tech Stack
-
-- **Framework:** Flutter 3.10+
-- **Database:** SQLite (sqflite)
-- **State Management:** Provider
-- **PDF Generation:** pdf, printing
-- **Date Handling:** intl
-- **UI Components:** Material 3
-
-## 📦 Dependencies
-
-```yaml
-dependencies:
-  sqflite: ^2.3.0           # SQLite database
-  path_provider: ^2.1.1     # File system paths
-  provider: ^6.1.1          # State management
-  intl: ^0.19.0             # Date formatting
-  table_calendar: ^3.0.9    # Calendar widget
-  image_picker: ^1.0.5      # Image selection
-  pdf: ^3.10.7              # PDF generation
-  printing: ^5.11.1         # PDF printing
-  share_plus: ^7.2.1        # File sharing
-  flutter_slidable: ^3.0.1  # Swipe actions
-  flutter_speed_dial: ^7.0.0 # FAB menu
-  flutter_secure_storage: ^9.0.0 # Secure storage
-```
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Flutter SDK (3.10 or higher)
-- Android Studio / VS Code
-- Android SDK (for Android builds)
-
-### Installation
-
-1. **Clone or navigate to the project:**
-   ```bash
-   cd d:\App\attendance
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   flutter pub get
-   ```
-
-3. **Run the app:**
-   ```bash
-   flutter run
-   ```
-
-### Build APK
-
+### Android (APK)
 ```bash
-# Debug APK
-flutter build apk --debug
-
-# Release APK
-flutter build apk --release
+# For a production-ready APK
+flutter build apk --release --split-per-abi
 ```
-
-The APK will be located at: `build/app/outputs/flutter-apk/app-release.apk`
-
-## 💡 Usage
-
-### Adding a Worker
-1. Go to Dashboard → Workers
-2. Tap the "+" button
-3. Fill in worker details
-4. Save
-
-### Marking Attendance
-1. Go to Dashboard → Attendance
-2. Select date
-3. Mark attendance for each worker
-4. Save
-
-### Calculating Wages
-1. Go to Dashboard → Wages
-2. Select worker
-3. Choose date range
-4. View calculated wages
-5. Generate wage slip (PDF)
-
-### Recording Payments
-1. Open worker details
-2. Tap "Add Payment"
-3. Enter amount and type (Cash/Advance)
-4. Save
-
-## 🎨 UI Features
-
-- ✅ Material 3 Design
-- ✅ Light & Dark mode support
-- ✅ Gradient cards
-- ✅ Smooth animations
-- ✅ Responsive layout
-- ✅ Large, touch-friendly buttons
-- ✅ Icon-based navigation
-
-## 📊 Wage Calculation Formula
-
-```
-Base Wage = Total Days × Daily Wage
-Overtime Wage = (Overtime Hours / 8) × Daily Wage × 1.5
-Gross Wage = Base Wage + Overtime Wage
-Net Wage = Gross Wage - Total Advances
-Balance = Net Wage - Total Paid
-```
-
-### Attendance Types
-- **Present:** 100% of daily wage
-- **Half-day:** 50% of daily wage
-- **Absent:** 0% of daily wage
-- **Overtime:** 1.5x rate (per hour)
-
-## 🔮 Upcoming Features
-
-- [ ] Multi-language support (Hindi, Tamil, Telugu)
-- [ ] App lock with PIN
-- [ ] Backup to SD card
-- [ ] Import/Export database
-- [ ] Bluetooth data transfer
-- [ ] QR code-based data sharing
-- [ ] Worker self-service portal
-- [ ] Biometric authentication
-
-## 📱 Supported Platforms
-
-- ✅ Android 5.0+ (API 21+)
-- 🔄 iOS (Coming Soon)
-- 🔄 Windows (Coming Soon)
-
-## 🐛 Troubleshooting
-
-### Database not created
-```bash
-flutter clean
-flutter pub get
-flutter run
-```
-
-### Build errors
-```bash
-cd android
-./gradlew clean
-cd ..
-flutter build apk
-```
-
-## 📄 License
-
-This project is for personal/commercial use.
-
-## 👨‍💻 Developer
-
-Built with ❤️ using Flutter
-
-## 📞 Support
-
-For issues or questions, please check the documentation or create an issue.
+The APK will be available at: `build/app/outputs/flutter-apk/app-release.apk`
 
 ---
 
-**Version:** 1.0.0  
-**Last Updated:** December 2025
+## 🐛 Troubleshooting
+
+*   **Pub Get Failed:** Run `flutter clean` then `flutter pub get`.
+*   **Gradle Error:** Ensure your `android/build.gradle` matches your Flutter version requirements.
+*   **Icon Missing:** Ensure `assets/readme/icon.png` is placed correctly.
+
+---
+
+## 📞 Support & Credits
+
+Built with ❤️ by **Antigravity**.  
+*For support or queries, please open an issue in the repository.*
+
+---
+
+**Version:** 1.0.0 | **Last Updated:** Jan 2026
